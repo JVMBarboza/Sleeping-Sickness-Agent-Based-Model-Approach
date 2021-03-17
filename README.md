@@ -1,5 +1,5 @@
 # Sleeping Sickness Agent-Based Model
-Agent based model for the simulation of Sleep Sickness disease behavior in a five thousand human population 
+Agent-based model for the simulation of Sleepin Sickness disease behavior in a fictional population.
 
 ## Getting Started
 
@@ -7,7 +7,7 @@ These instructions will help you to get a copy of the project in your local mach
 
 ## Prerequisites
 
-During the implementation of the model those were the tools used, therefore, highly recomended as prerequisites for the simulations using the script. Otherwise it is possible to run manually and item I) becomes the only prerequisite necessary**(see Acknowledgments to better info).
+During the implementation of the model those were the tools used, therefore, highly recomended as prerequisites for the simulations using the script. Otherwise it is possible to run manually and item I) becomes the only prerequisite necessary(*).
 
 ```
     I)   GCC (version 7.5.0)
@@ -19,13 +19,15 @@ During the implementation of the model those were the tools used, therefore, hig
 
 ## Installing
 
-No instalation, just modify and execute "run.sh"
+No instalation, just modify and execute run.sh file.
 
 ## Running
 
-    i)  change the main R variable in each simulation for better results since a different value of R implies different pseudo random numbers. Also remember to modify the directory of simulation results in python files(**).
+    i) The authors recommend a change in the "ran" variable value in run.sh for each simulation since a different value of "ran" implies in different pseudo random numbers.
+    
+    ii) Modify the directory of simulation results in python files(**).
 
-    ii) modify variable values in sed command.
+    iii) modify variable values in sed command.
 
 ## Built With
 
@@ -41,15 +43,11 @@ No instalation, just modify and execute "run.sh"
 
 ## Acknowledgments
 
-*) As mentioned, if the user don't feel confortable using python tools, it is possible to run everything manually using the main.c in the "maincode" directory or inserting "#" in the python line(s) in the script.
+*) As mentioned, if the user don't feel confortable using python tools, it is possible to run everything manually using the main.c in the "maincode" directory or inserting "#" in the python line(s) in the run.sh script.
 
-**)pay attention to the name of output files in the script and in the python codes "results/directory", have to be the same to work fine. 
+**)pay attention to the name of output files in the script and in the python codes "results/directory", have to be the same to plot work fine. 
 
 
-Author: João Victor M. Barboza
+Authors: Aquino L. Espíndola, João Victor M. Barboza & Matheus de Moraes Gonçalves Correia
 
 Date: June, 2020 
-
-"Messers Moony, Wormtail, Padfoot and Prongs Purveyors of Aids to magical Mischief-Makers
-are proud to present..."
-
