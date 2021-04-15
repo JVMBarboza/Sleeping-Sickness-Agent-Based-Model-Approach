@@ -9,7 +9,7 @@ int  totalOfYears                         = 10;
 char anyTreatment                         = 'y'; //any treatment in simulation? y(yes) or n(no)
 int treatmProgramTimeDuration             = 365;
 int yearOfTreatmentStart[4]               = {2,4,6,8}; 
-double diseasedPorcentageToGetInTreatm[4] = {0.50,0.2,0.2,0.2};
+double diseasedPorcentageToGetInTreatm[4] = {0.50,0.20,0.20,0.20};
 
 
 /*############################ CONSTANTS #############################*/
@@ -21,9 +21,9 @@ R = 8932924
 ;
 
 //POPULATIONS && TREATMENT
-#define LenTseTsePop  50000
-#define LenHumanPop   5000
-#define LenAnimalsPop 1000
+#define LenTseTsePop  50000 //(SMITH, 2016)
+#define LenHumanPop   5000  //(SMITH, 2016)
+#define LenAnimalsPop 1000  //(SMITH, 2016)
 
 #define initialInfectedHumanPorcetg     0.006  //H:0.6% (SMITH, 2016) 
 #define initialInfectedFliesPorcetg     0.024  //F:2.4% (SMITH, 2016) 
@@ -31,6 +31,8 @@ R = 8932924
 
 //FLIES CONSTANTS
 #define fliesDeathRate 0.021976910177 // (days⁻¹) (ARTZROUNI, M.; GOUTEUX, J.-P. 1996)
+
+#define fliesMaxAge 60 //VERIFICAR
 
 #define ProbBiteMax 0.25  //(ARTZROUNI, M.; GOUTEUX, J.-P. 1996)   
 #define ProbBiteMin 0.05                 
@@ -44,7 +46,10 @@ R = 8932924
 #define naturalDeathMaxEstim 0.000068490805 // 1/14600 = 1/(365*40) days⁻¹ (SMITH, 2016)
 #define naturalDeathMinEstim 0.000045661058 // 1/21900 = 1/(365*60) days⁻¹
 
-#define bloodMealOnHumans 0.333 //(SIMO, 2012) //0.667 //(GREBAUT, 2009) 
+#define animalsMaxAge 365 //DUE TO ANIMALS SLAUTHER
+
+#define bloodMealOnHumans          0.333 //(SIMO, 2012)    //0.667 //(GREBAUT, 2009) 
+#define bloodMealOnDomesticAnimals 0.583 //(SIMO, 2012)
 
 #define probInfectFliesMax 0.05 //(SIMARRO,2014) //0.14 //(ARTZROUNI, M.; GOUTEUX, J.-P. 2016)
 #define probInfectFliesMin 0.02                  //0.05 
@@ -98,7 +103,8 @@ struct Human{
 struct Fly{
     int  age;
     int  stage;           
-    char diseaseReservt;  
+    char diseaseReservt;
+    char firstMeal;  
     int  daysWithoutEat;  
     int  daysInStage; 
     int  stageTotalDays;  
@@ -158,6 +164,11 @@ double ProbFlyGetInfect(){
 double ProbFlyInfect(){
     return ProbInfectHumanAndAnimals;
     //return (sortRandomNumber(&R)*(ProbInfectHumanAndAnimalsMax-ProbInfectHumanAndAnimalsMin) + ProbInfectHumanAndAnimalsMin);
+}
+
+//sort duration in the interval:15-30 days  
+int calculateFliesLatentDurantionDays(){
+    return sortRandomNumberInteger(fliesMinDaysInLatent,fliesMaxDaysInLatent+1);
 }
 
 //Sort duration in the interval:10-14 days  
@@ -226,13 +237,6 @@ int calcAgeByDistribution(){
 
 }
 
-//sort duration in the interval:15-30 days  
-int calculateFliesLatentDurantionDays(){
-    return sortRandomNumberInteger(fliesMinDaysInLatent,fliesMaxDaysInLatent+1);
-}
-
-
-
 /*##################################################################################*/
 /*######################### Change of state related functions ######################*/
 /*##################################################################################*/
@@ -243,13 +247,14 @@ void resetIndividualFlies(int coorde){
     TseTse[coorde].age            = 0;
     TseTse[coorde].stage          = 0;
     TseTse[coorde].diseaseReservt = 'n';
+    TseTse[coorde].firstMeal      = 'y';
     TseTse[coorde].daysInStage    = 0;
     TseTse[coorde].stageTotalDays = 0;
     TseTse[coorde].daysWithoutEat = 0;
 }
 
 int calcDeathByAgeFlies(int coord){
-    if(TseTse[coord].age >= 60){
+    if(TseTse[coord].age >= fliesMaxAge){
         resetIndividualFlies(coord);
         return 1;
     }
@@ -489,7 +494,7 @@ void resetIndividualAnimal(int coord){
 }
 
 int calcDeathByAgeAnimals(int coord){
-    if(Animal[coord].age >= 365){
+    if(Animal[coord].age >= animalsMaxAge){               // CONFIRMAR
         resetIndividualAnimal(coord);
         return 1;
     }
@@ -533,12 +538,16 @@ void fromLatentToInfectedAnimals(int coorde){
 /*##################################################################################*/
 
 int sortHumanOrAnimalToBeBited(){
+    
     double rn = sortRandomNumber(&R);
+    
     if(rn < bloodMealOnHumans)
         return 1; //HUMAN
-    else
-        return 2; //ANIMAL
-    
+    else{
+        if( (rn >= bloodMealOnHumans) && (rn < (bloodMealOnHumans+bloodMealOnDomesticAnimals)) )
+        return 2; //DOMESTIC ANIMAL 
+    }
+
 }
 
 //Simulate fly biting indiv infected(sort individual to be bited) 
@@ -551,14 +560,14 @@ void verifiesSusceptbFlyGetInfection(int coorde){
         
     if(key==1){//Human bited      
         individualSelected = sortRandomNumberInteger(0,5000);
-        if(Human[individualSelected].diseaseReservt=='y' && rn<ProbFlyGetInfect()){//infection takes place
+        if((Human[individualSelected].diseaseReservt=='y' && rn<ProbFlyGetInfect()) && (TseTse[coorde].firstMeal=='y' && TseTse[coorde].age <= 5)){//infection takes place
             fromSuscpToLatentFlies(coorde); //change the state of selected fly
         }
     }
     
     if(key==2){//Animal bited
         individualSelected = sortRandomNumberInteger(0,1000);
-        if(Animal[individualSelected].diseaseReservt=='y' && rn<ProbFlyGetInfect()){//infection takes place
+        if((Animal[individualSelected].diseaseReservt=='y' && rn<ProbFlyGetInfect()) && (TseTse[coorde].firstMeal=='y' && TseTse[coorde].age <= 5)){//infection takes place
             fromSuscpToLatentFlies(coorde); //change the state of selected fly
         }
     }
@@ -603,7 +612,8 @@ void verifiesBite(int coord){
         if(TseTse[coord].stage == 2){
             verifiesInfectedFlyTransmitInfection();
         }
-        TseTse[coord].daysWithoutEat=0;
+        TseTse[coord].daysWithoutEat = 0;
+        TseTse[coord].firstMeal      = 'n'; 
     }
     else{ //didnt bite
         TseTse[coord].daysWithoutEat++;
@@ -715,36 +725,37 @@ void verifyTreatmSucessOnIndiv(int coord){
 
 void generateInitialLattice(){
     
-    int i;
+    int indiv;
     
-    for (i = 0; i < (int)(LenTseTsePop); i++){ //Generating Flies pop
-        TseTse[i].age            = sortRandomNumberInteger(0,60);
-        TseTse[i].stage          = 0;
-        TseTse[i].daysWithoutEat = sortRandomNumberInteger(0,4); 
-        TseTse[i].daysInStage    = 1;
-        TseTse[i].stageTotalDays = 0;
-        TseTse[i].diseaseReservt = 'n';
+    for (indiv = 0; indiv < (int)(LenTseTsePop); indiv++){ //Generating Flies pop
+        TseTse[indiv].age            = sortRandomNumberInteger(0,60);
+        TseTse[indiv].stage          = 0;
+        TseTse[indiv].firstMeal      = 'y';
+        TseTse[indiv].daysWithoutEat = sortRandomNumberInteger(0,4); 
+        TseTse[indiv].daysInStage    = 1;
+        TseTse[indiv].stageTotalDays = 0;
+        TseTse[indiv].diseaseReservt = 'n';
     }
 
-    for (i = 0; i < (int)(LenHumanPop); i++){  //Generating human population
-        Human[i].age              = calcAgeByDistribution();
-        Human[i].stage            = 0;
-        Human[i].stageOfInfection = 0;
-        Human[i].diseaseReservt   = 'n';
-        Human[i].daysInStage      = 1;
-        Human[i].daysInTreat      = 0;
-        Human[i].individualProbOfTreatSucces = 0.0;
-        Human[i].treatTotalDays   = 0;
-        Human[i].stageTotalDays   = 0;
+    for (indiv = 0; indiv < (int)(LenHumanPop); indiv++){  //Generating human population
+        Human[indiv].age              = calcAgeByDistribution();
+        Human[indiv].stage            = 0;
+        Human[indiv].stageOfInfection = 0;
+        Human[indiv].diseaseReservt   = 'n';
+        Human[indiv].daysInStage      = 1;
+        Human[indiv].daysInTreat      = 0;
+        Human[indiv].individualProbOfTreatSucces = 0.0;
+        Human[indiv].treatTotalDays   = 0;
+        Human[indiv].stageTotalDays   = 0;
         countHumanSusceptible++;
     }
 
-    for (i = 0; i < (int)(LenAnimalsPop); i++){ //Generating Animals pop
-        Animal[i].age            = sortRandomNumberInteger(0,366); 
-        Animal[i].stage          = 0;
-        Animal[i].diseaseReservt = 'n';
-        Animal[i].daysInStage    = 1;
-        Animal[i].stageTotalDays = 0;
+    for (indiv = 0; indiv < (int)(LenAnimalsPop); indiv++){ //Generating Animals pop
+        Animal[indiv].age            = sortRandomNumberInteger(0,366); 
+        Animal[indiv].stage          = 0;
+        Animal[indiv].diseaseReservt = 'n';
+        Animal[indiv].daysInStage    = 1;
+        Animal[indiv].stageTotalDays = 0;
     }
 }
 
