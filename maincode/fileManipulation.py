@@ -2,7 +2,7 @@ import glob
 import pandas as pd 
 
 #LOADING DATA FILES 
-filenames = glob.glob("results/simulation09/*.csv")
+filenames = glob.glob("results/simulation01/*.csv")
 
 
 # SETTING FRAMES
@@ -98,6 +98,25 @@ total_infected_deaths_frame['Total Infection Death Mean'] = total_infected_death
 daily_new_infectives_frame['Daily New Infective Mean']    = daily_new_infectives_frame.mean(axis=1)
 daily_new_deaths_frame['Daily Deaths Mean']               = daily_new_deaths_frame.mean(axis=1)
 
+#CALCULATING STD VALUES
+susceptible_frame['Susceptible std']                     = susceptible_frame.std(axis=1)
+latent_frame['Latent std']                               = latent_frame.std(axis=1)
+infected_stg_one_frame['Infection Stage 1 std']          = infected_stg_one_frame.std(axis=1)
+infected_stg_two_frame['Infection Stage 2 std']          = infected_stg_two_frame.std(axis=1)
+infected_total_frame['Total Infected std']               = infected_total_frame.std(axis=1)
+recovered_frame['Recovered std']                         = recovered_frame.std(axis=1)
+in_treatment_frame['In Treatment std']                   = in_treatment_frame.std(axis=1)
+natural_deaths_frame['Natural Death std']                = natural_deaths_frame.std(axis=1)
+stage_one_deaths['Stage 1 Death std']                    = stage_one_deaths.std(axis=1)
+stage_two_deaths['Stage 2 Death std']                    = stage_two_deaths.std(axis=1)
+total_infected_deaths_frame['Total Infection Death std'] = total_infected_deaths_frame.std(axis=1)
+daily_new_infectives_frame['Daily New Infective std']    = daily_new_infectives_frame.std(axis=1)
+daily_new_deaths_frame['Daily Deaths std']               = daily_new_deaths_frame.std(axis=1)
+
 #OUTPUT
+
 outputFrame = pd.concat([timeFrame, susceptible_frame['Susceptible Mean'], latent_frame['Latent Mean'], infected_stg_one_frame['Infection Stage 1 Mean'], infected_stg_two_frame['Infection Stage 2 Mean'], infected_total_frame['Total Infected Mean'], recovered_frame['Recovered Mean'], in_treatment_frame['In Treatment Mean'], natural_deaths_frame['Natural Death Mean'], stage_one_deaths['Stage 1 Death Mean'], stage_two_deaths['Stage 2 Death Mean'], total_infected_deaths_frame['Total Infection Death Mean'], daily_new_infectives_frame['Daily New Infective Mean'], daily_new_deaths_frame['Daily Deaths Mean']], axis=1)
 outputFrame.to_csv('result.csv', index=False)
+
+outputFrame = pd.concat([timeFrame, susceptible_frame['Susceptible std'], latent_frame['Latent std'], infected_stg_one_frame['Infection Stage 1 std'], infected_stg_two_frame['Infection Stage 2 std'], infected_total_frame['Total Infected std'], recovered_frame['Recovered std'], in_treatment_frame['In Treatment std'], natural_deaths_frame['Natural Death std'], stage_one_deaths['Stage 1 Death std'], stage_two_deaths['Stage 2 Death std'], total_infected_deaths_frame['Total Infection Death std'], daily_new_infectives_frame['Daily New Infective std'], daily_new_deaths_frame['Daily Deaths std']], axis=1)
+outputFrame.to_csv('result_standard_deviation.csv', index=False)

@@ -6,7 +6,7 @@
 simulationName="simulation01"
 
 #R
-ran=89212185
+ran=89212589
 
 #NUMBER OF SIMULATIONS
 NumOfSimulations=50
