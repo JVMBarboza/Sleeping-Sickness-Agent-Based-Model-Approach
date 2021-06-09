@@ -1,5 +1,5 @@
 # Sleeping Sickness Agent-Based Model
-Agent-based model for the simulation of Sleepin Sickness disease behavior in a fictional population.
+Agent-based model for the simulation of Sleeping Sickness disease behavior in a fictional population.
 
 ## Getting Started
 
@@ -7,7 +7,7 @@ These instructions will help you to get a copy of the project in your local mach
 
 ## Prerequisites
 
-During the implementation of the model those were the tools used, therefore, highly recomended as prerequisites for the simulations using the script. Otherwise it is possible to run manually and item I) becomes the only prerequisite necessary(*).
+During the implementation of the model,  tools used are listed below. Therefore, we highly recomend the script  as prerequisites to run simulations. Otherwise, you may run it manually and item I is the only prerequisite necessary.
 
 ```
     I)   GCC (version 7.5.0)
