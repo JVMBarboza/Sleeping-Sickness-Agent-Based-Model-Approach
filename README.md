@@ -37,9 +37,6 @@ No instalation, just modify and execute run.sh file.
 * [Pandas](https://pandas.org/) - Data manipulation
 * [Numpy](https://numpy.org/) - Data manipulation
 
-## License
-
-    ---*---
 
 ## Acknowledgments
 

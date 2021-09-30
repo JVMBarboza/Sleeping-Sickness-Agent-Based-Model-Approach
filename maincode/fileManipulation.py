@@ -21,7 +21,6 @@ daily_new_infectives_frame   = pd.DataFrame()
 daily_new_deaths_frame       = pd.DataFrame()    
 
 
-#O MOTIVO DE FAZER ISSO AO INVÉS DE LER DOS ARQUIVOS É QUE EU NÃO IREI PRECISAR FAZER MEDIA DE VARIOS ARQUIVOS SENDO O RESULTADO IGUAL VISTO QUE TODOS OS TEMPOS SAO IGUAIS
 time = []
 #in the case of simulation of 10 years
 for i in range(0,3649):

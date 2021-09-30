@@ -11,6 +11,7 @@ ran=89212589
 #NUMBER OF SIMULATIONS
 NumOfSimulations=50
 
+
 ##############################################################################
 
 for i in $(seq 1 $NumOfSimulations);
