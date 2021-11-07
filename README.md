@@ -38,11 +38,11 @@ No instalation, just modify and execute run.sh file.
 * [Numpy](https://numpy.org/) - Data manipulation
 
 
-## Acknowledgments
+# Notes
 
 *) As mentioned, if the user don't feel confortable using python tools, it is possible to run everything manually using the main.c in the "maincode" directory or inserting "#" in the python line(s) in the run.sh script.
 
-**)pay attention to the name of output files in the script and in the python codes "results/directory", have to be the same to plot work fine. 
+**)pay attention to the name of output files in the script and in the python codes "results/directory", have to be the same to plot work as expected. 
 
 
 Authors: Aquino L. Espíndola, João Victor M. Barboza & Matheus de Moraes Gonçalves Correia
