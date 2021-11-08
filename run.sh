@@ -18,7 +18,7 @@ for i in $(seq 1 $NumOfSimulations);
 do
     root=$((ran+i)) #different R value for generate different pseudo random numbers 
     
-    cp maincode/main.c .  #copy maincode and edit with different R value
+    cp src/main.c .  #copy maincode and edit with different R value
     sed -i -e "s/\(R = \).*/\1$root/" main.c
     
     echo "#######################################################"
@@ -42,8 +42,8 @@ mv *.csv $simulationName/
 mv $simulationName/ results/
 
 #MANIPULATING DATA
-python maincode/fileManipulation.py
+python src/fileManipulation.py
 mv result.csv results/$simulationName/
 
 #PLOTING
-python maincode/plot.py
+python src/plot.py
