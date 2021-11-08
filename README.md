@@ -1,6 +1,3 @@
-# Sleeping Sickness Agent-Based Model
-Agent-based model for the simulation of Sleeping Sickness disease behavior in a fictional population.
-
 ## Getting Started
 
 These instructions will help you to get a copy of the project in your local machine for development, testing, and research purposes. 
