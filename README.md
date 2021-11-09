@@ -35,7 +35,7 @@ No instalation, just modify and execute run.sh file.
 * [Numpy](https://numpy.org/) - Data manipulation
 
 
-# Notes
+## Notes
 
 *) As mentioned, if the user don't feel confortable using python tools, it is possible to run everything manually using the main.c in the "maincode" directory or inserting "#" in the python line(s) in the run.sh script.
 
